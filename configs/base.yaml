@@ -1,0 +1,25 @@
+# Phase 0 frozen choices — do not change mid-project.
+seed: 42
+
+backbone:
+  name: intfloat/multilingual-e5-base
+  query_prefix: "query: "
+  passage_prefix: "passage: "
+  device: auto           # cuda if available, else cpu (override: --device)
+  batch_size: 32         # sensible on CPU; use --batch-size 128+ on GPU
+
+data:
+  dataset: miracl/id
+  split: dev
+
+eval:
+  metrics: [ndcg@10, recall@100, mrr@10]
+  top_k: 100
+  significance: paired_t + permutation(100k), holm-bonferroni across metrics
+
+paths:
+  embeddings_dir: data/embeddings
+  results_csv: experiments/results.csv
+
+encode:
+  shard_size: 25000

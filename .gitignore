@@ -1,0 +1,10 @@
+data/
+!data/.gitkeep
+models/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+wandb/
+experiments/*.ckpt
+.claude
+CLAUDE.md

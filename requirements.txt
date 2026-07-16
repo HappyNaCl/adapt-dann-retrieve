@@ -1,0 +1,16 @@
+# Pinned to the working `nlp` env (Python 3.10, 2026-07-16).
+# On a GPU machine, install a CUDA build of torch FIRST, e.g.:
+#   pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu126
+# then `pip install -r requirements.txt` (torch line will be satisfied).
+torch==2.10.0
+transformers==5.3.0
+sentence-transformers==5.6.0
+datasets==4.6.1
+huggingface_hub==1.6.0
+ir_datasets==0.6.2
+ranx==0.3.21
+faiss-cpu==1.14.3
+numpy==1.25.2
+pandas==2.1.4
+scipy==1.11.4
+PyYAML==6.0.3
