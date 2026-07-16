@@ -13,6 +13,7 @@ import os
 import sys
 import time
 
+import torch
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -50,8 +51,9 @@ def main() -> None:
     device = harness.resolve_device(args.device or cfg["backbone"].get("device", "auto"))
     batch_size = args.batch_size or cfg["backbone"]["batch_size"]
     split = cfg["data"]["split"]
+    gpu = f" ({torch.cuda.get_device_name(device)})" if device.startswith("cuda") else ""
     print(f"[run] model={model_name} split={split} subset={args.subset or 'FULL'} "
-          f"device={device} batch_size={batch_size}", flush=True)
+          f"device={device}{gpu} batch_size={batch_size}", flush=True)
 
     queries = miracl.load_queries(split)
     qrels = miracl.load_qrels(split)

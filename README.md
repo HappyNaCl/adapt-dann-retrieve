@@ -37,7 +37,7 @@ python scripts/run_eval.py --config configs/base.yaml --tag e5-base-zeroshot
 ```
 
 Corpus embeddings are cached as resumable float16 shards under
-`data/embeddings/<model>/<corpus>/`; interrupted runs pick up at the last
+`results/embeddings/<model>/<corpus>/`; interrupted runs pick up at the last
 complete shard. Results append to `experiments/results.csv`.
 
 ## Layout
@@ -51,5 +51,5 @@ src/eval/       harness (encode/search/metrics), significance tests
 src/models/     later: GRL, adapters
 src/train/      later: DAPT, adversarial, GPL, contrastive
 experiments/    results.csv + analysis notebooks
-data/           embeddings cache (gitignored)
+results/        embeddings cache (gitignored)
 ```

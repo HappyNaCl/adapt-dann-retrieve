@@ -3,7 +3,7 @@
 Pipeline: encode corpus once (sharded, resumable, cached on disk) -> encode
 queries -> streaming exact top-k search -> ranx metrics against qrels.
 
-Corpus embeddings are cached per (model, corpus_tag) under data/embeddings/,
+Corpus embeddings are cached per (model, corpus_tag) under results/embeddings/,
 so later phases (informal query variants, aligned encoders) re-encode only
 queries unless the document encoder itself changed.
 """

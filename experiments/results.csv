@@ -1,0 +1,2 @@
+timestamp,tag,model,dataset,corpus,n_docs,n_queries,seed,ndcg@10,recall@100,mrr@10,encode_seconds
+2026-07-16T11:34:48,smoke-e5base,intfloat/multilingual-e5-base,miracl/id/dev,subset20000,28286,960,42,0.7122,0.9881,0.7718,2481

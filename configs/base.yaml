@@ -18,7 +18,7 @@ eval:
   significance: paired_t + permutation(100k), holm-bonferroni across metrics
 
 paths:
-  embeddings_dir: data/embeddings
+  embeddings_dir: results/embeddings
   results_csv: experiments/results.csv
 
 encode:
