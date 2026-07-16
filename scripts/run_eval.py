@@ -7,10 +7,19 @@ Smoke test on a subset (all qrels-relevant docs + N distractors; numbers are
 NOT comparable to published full-corpus results — pipeline validation only):
     python scripts/run_eval.py --config configs/base.yaml --subset 20000 --tag smoke
 """
-import argparse
-import itertools
 import os
 import sys
+
+# ir_datasets opens MIRACL TSVs with the locale codepage (cp1252 on Windows)
+# unless Python runs in UTF-8 mode, crashing on Indonesian text. Re-exec in
+# UTF-8 mode before the heavy imports.
+if sys.platform == "win32" and sys.flags.utf8_mode == 0:
+    import subprocess
+
+    sys.exit(subprocess.call([sys.executable, "-X", "utf8", *sys.argv]))
+
+import argparse
+import itertools
 import time
 
 import torch

@@ -3,6 +3,15 @@
 ir_datasets caches under ~/.ir_datasets; iterating docs triggers the corpus
 download on first run.
 """
+import sys
+
+# ir_datasets opens MIRACL TSVs with the locale codepage (cp1252 on Windows)
+# unless Python runs in UTF-8 mode, crashing on Indonesian text.
+if sys.platform == "win32" and sys.flags.utf8_mode == 0:
+    import subprocess
+
+    sys.exit(subprocess.call([sys.executable, "-X", "utf8", *sys.argv]))
+
 import time
 
 import ir_datasets

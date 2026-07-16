@@ -157,3 +157,14 @@ def evaluate_run(
     if isinstance(result, dict):
         return {str(k): float(v) for k, v in result.items()}
     return {metrics[0]: float(result)}  # ranx returns a bare float for a single metric
+
+
+def evaluate_per_query(
+    run_dict: dict[str, dict[str, float]],
+    qrels_dict: dict[str, dict[str, int]],
+    metrics: tuple[str, ...] = ("ndcg@10", "recall@100", "mrr@10"),
+) -> dict[str, dict[str, float]]:
+    """{metric: {qid: score}} — the qid-keyed form paired significance tests need."""
+    run = Run(run_dict)
+    ranx_evaluate(Qrels(qrels_dict), run, list(metrics))
+    return {m: {qid: float(v) for qid, v in run.scores[m].items()} for m in metrics}

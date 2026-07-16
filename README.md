@@ -40,16 +40,44 @@ Corpus embeddings are cached as resumable float16 shards under
 `results/embeddings/<model>/<corpus>/`; interrupted runs pick up at the last
 complete shard. Results append to `experiments/results.csv`.
 
+Phase 0 gate passed 2026-07-16: full-corpus zero-shot nDCG@10 = 0.5103
+(published mE5-base ≈ 0.51). ✅
+
+## Gap decomposition (Phase 1)
+
+```bash
+# 1. sample 150 dev queries into a TSV (seeded, reproducible)
+python scripts/make_pilot_set.py --n 150
+
+# 2. manually rewrite the 'informal' column of
+#    experiments/pilot/pilot_queries.tsv into colloquial Indonesian
+
+# 3. three-way eval (formal / informal / Kamus-Alay-normalized) against the
+#    cached full-corpus embeddings — only queries are re-encoded
+python scripts/run_gap_eval.py --tag gap-pilot
+```
+
+Prints the vocabulary-vs-register decomposition of the retrieval gap and
+writes `experiments/gap/<tag>_summary.json` (means, paired t + permutation
+significance with Holm-Bonferroni, same-intent embedding cosines) plus a
+per-query CSV for figures. The register residual is the go/no-go number for
+the alignment method (CLAUDE.md Phase 1 gate).
+
+Normalization merges two lexicons in `resources/lexicons/` (~15.5k entries):
+`new_kamusalay.csv` (Ibrohim & Budi 2019) and
+`colloquial-indonesian-lexicon.csv` (Salsabila et al. 2018).
+
 ## Layout
 
 ```
 configs/        frozen experiment configs (base.yaml = Phase 0 choices)
 docs/           hypothesis one-pager, notes
-scripts/        entry points (download, run_eval)
-src/data/       MIRACL access layer (later: normalize.py, make_informal.py)
+resources/      Kamus Alay lexicons (committed; small)
+scripts/        entry points (download, run_eval, make_pilot_set, run_gap_eval)
+src/data/       MIRACL access layer, normalize.py (later: make_informal.py)
 src/eval/       harness (encode/search/metrics), significance tests
 src/models/     later: GRL, adapters
 src/train/      later: DAPT, adversarial, GPL, contrastive
-experiments/    results.csv + analysis notebooks
+experiments/    results.csv, pilot query TSV, gap outputs, notebooks
 results/        embeddings cache (gitignored)
 ```
