@@ -1,0 +1,151 @@
+query_id,cosine,formal,llm
+506,0.7552,Berapa luas Maluku Utara ?,maluku utara nih luasnya brp ya gue blom hapal dong
+1116,0.7873,berapakah luas  Jepang ?,jepang luas brp ya lagi kepo nih
+3071,0.7908,berapakah luas Maluku Utara?,maluku utara luasnya brp sih anjir
+1913,0.7935,Apa itu Wrekodara?,wrekodara itu apaan sih gue baru denger nih
+1198,0.7935,Berapa jumlah negara anggota Uni Eropa?,uni eropa anggotanya brp ya gaes penasaran nih
+3042,0.8054,Berapa negara bagian di Venezuela?,venezuela nih brp negara bagian nya ya penasaran cuy
+559,0.8107,tahun berapakah SWA didirikan?,swa didirikan taun brp sih anjir
+5971,0.8135,Apa itu bilangan pecahan?,bilangan pecahan itu sebenernya apaan sih gue masih bingung nih
+5980,0.8138,Berapa luas Kabupaten Kolaka Utara?,kabupaten kolaka utara luasnya brp sih mau masukin di laporan
+3084,0.8142,berapakah jumlah negara yang di lintasi Sungai Nil?,sungai nil dilintasi brp negara sih gue penasaran
+3892,0.8185,Apa yang dimaksud dengan Karotenoid ?,karotenoid itu sebenernya apaan sih jelasin dikit dong
+3046,0.8187,Apa itu transistor?,transistor itu apaan sih gue masih belepotan nih jelasin dikit dong
+679,0.8234,Apa itu Qere dan Ketiv?,qere dan ketiv itu sebenernya apa sih gaes pengen tau
+4919,0.8239,berapakah luas Jambi ?,luas Jambi sebenernya brp sih gan
+5861,0.8247,Apa itu logaritma?,logaritma nih gue masih bingung itu sebenernya apaan sih
+2161,0.8250,Berapa lama jarak tempuh penerbangan Jakarta-Raja Ampat ?,jakarta raja ampat penerbangan brp lama ya cuy
+4589,0.8250,Apakah yang dimaksud dengan Ordo mendikan?,nih ordo mendikan itu maksudnya apa sih gaes bingung anjir
+3609,0.8270,berapakah sekuel Harry Potter ?,harry potter punya brp sekuel sih gaes penasaran
+4690,0.8271,Apa yang dimaksud dengan Molekul?,molekul nih maksudnya apa sih gak ngerti banget
+3616,0.8273,Kapan Ritus Suriah Timur dilakukan?,ritus suriah timur tuh dilaksanain kapan sih anjir
+3917,0.8280,siapakah pendiri Majalah Bobo?,majalah bobo pendirinya siapa sih anjir pengen tau nih
+3452,0.8287,Siapakah Ki Tjokrowasito?,ki tjokrowasito itu siapa sih gue penasaran nih woy
+1911,0.8287,Apakah pengertian DNA ?,dna itu sebenernya apaan sih cuy
+3779,0.8299,Apa yang dimaksud dengan tabel periodik ?,tabel periodik nih fungsinya apa sih sama isinya ngapain ya
+21,0.8312,Siapakah yang menemukan DNA ?,dna itu siapa yg nemuin sih anjir
+2001,0.8339,Apa yang dimaksud dengan hewab amfibi?,hewab amfibi itu apaan sih sebenernya gimana hidupnya antara darat sama air gitu kaga jelas anjir
+5372,0.8352,Apa pengertian dari seorang filsuf ?,filsuf itu sebenernya apa sih gue penasaran
+1559,0.8370,Tahun berapa Filmfare pertama diselenggarakan ?,filmfare pertama diselenggarakan taun brp sih gan
+4436,0.8394,berapakah luas Filipina?,filipina luasnya brp sih kepo anjir
+3273,0.8410,Tahun berapa Moritz Kaposi menemukan Sarkoma Kaposi?,sarkoma kaposi itu pertama dicatat taun brp sama moritz kaposi sih
+1731,0.8470,Pada umur berapa Paul David Hewson bergabung dengan U2?,paul david hewson sama U2 nih dia gabung umur brp anjir
+4358,0.8474,Siapakah yang terlibat dalam proyek SOI ASIA?,proyek soi asia itu siapa aja sih yg terlibat nih cuy
+1006,0.8498,Apa yang dimaksud dengan Artefak ?,artefak itu maksudnya apaan sih gw bingung
+613,0.8511,Apa yang dimaksud dengan Uskup Roma?,gereja katolik nih yg dimaksud sama istilah uskup roma itu apaan sih
+3731,0.8524,Berapa luas Kabupaten Klungkung?,kabupaten klungkung luasnya brp sih anjir
+203,0.8546,Apakah yang dimaksud dengan norma hukum?,norma hukum itu sebenernya maksudnya apa sih anjir
+3482,0.8555,siapakah yang memulai Seni modern?,seni modern siapa yg mulai sih penasaran nih
+4608,0.8566,apakah mata uang yang digunakan di Yunani?,yunani mata uangnya apa ya cuy
+2965,0.8580,Berapa luas wilayah Candi Cangkuang?,candi cangkuang luas wilayahnya brp sih gan
+1374,0.8582,Berapa lama Kekaisaran Romawi berkuasa?,kekaisaran romawi udah berkuasa brp lama sih
+4701,0.8586,Kapan kekaisaran Romawi Timur runtuh?,kekaisaran romawi timur runtuh taun brp nih
+4600,0.8592,berapakah jumlah anak Joko Widodo?,joko widodo anaknya ada brp sih
+1239,0.8608,Apakah smartphone adalah telepon genggam?,smartphone sama telepon genggam itu sebenernya sama apa beda anjir
+3213,0.8609,Dimana Song Jieun lahir ?,song jieun nih lahir di mana sih
+4183,0.8613,Dari mana Samaun Bakri berasal ?,samaun bakri asalnya dari mana nih sih
+60,0.8622,Kapan Paus Benediktus XV lahir ?,paus benediktus xv lahir kapan sih anjir
+5719,0.8627,Apakah karya pertama dari Turbo ?,turbo nih karya pertama mereka apa sih dong
+567,0.8645,Kapan D. Afonso Henriques lahir?,d afonso henriques lahir kapan sih taun brp nih
+3119,0.8646,apakah ibukota  Korea Utara?,ngomong2 Korea Utara ibukota nya apa sih woy
+3121,0.8646,Apakah Pemasaran Internasional dapat menyebabkan kenaikan harga?,pemasaran internasional beneran bisa bikin harga naik ga sih kok penasaran
+2262,0.8660,dimankah Zhangsun Wuji dilahirkan?,zhangsun wuji nih lahir dimana sih gan
+389,0.8670,Apa pengertian ilmu Astronomi ?,nih ngomongin ilmu Astronomi lo pada ngerti ga ilmu Astronomi itu maksudnya apa sih
+1928,0.8672,Berapa jumlah planet di dalam tatasurya?,tatasurya isinya brp planet anjir
+919,0.8687,Apakah yang dimaksud dengan frekuensi audio?,frekuensi audio itu apa sih gue penasaran nih
+1252,0.8699,Dimana letak masjid Istiqlal?,masjid istiqlal nih lokasinya ada di mana ya gan
+4962,0.8701,Kapan Minamoto no Yoritomo meninggal?,minamoto no yoritomo meninggal kapan ya kok kepo nih
+849,0.8735,apakah alasan Ghana Airways dihentikan?,ghana airways nih kenapa sampe dihentikan ya anjir
+3930,0.8747,siapakah pencipta roket pertama kali?,penasaran soal roket nih siapa pencipta roket pertama kali sih anjir
+5503,0.8749,Dimana letak Suku Anak Dalam ?,suku anak dalam tinggal dimana sih di indonesia kok penasaran
+4332,0.8764,berapakah luas Jepang ?,jepang luasnya brp sih
+736,0.8768,Dimana wilayah kekuasaan Dinasti Utsmaniyah?,dinasti utsmaniyah kuasanya di mana sih anjir
+746,0.8771,Berapa luas Samudera Pasifik ?,samudera pasifik luasnya brp sih anjir
+4889,0.8786,Berapakah luas wilayah Tolitoli?,tolitoli luas wilayahnya brp sih anjir
+324,0.8786,Siapakah penegak hukum di Indonesia?,penegak hukum di Indonesia itu siapa aja sih anjir
+4198,0.8790,Berapa luas Kabupaten Kepulauan Meranti?,kabupaten kepulauan meranti luasnya brp dong
+2154,0.8819,Apa yang menyebabkan terjadinya pemberontakan petani pada akhir Dinasti Sui?,pemberontakan petani akhir dinasti sui disebabin apa sih kok
+6021,0.8822,Kapankah tembok berlin dibangun ?,tembok berlin dibangun kapan sih gw penasaran
+1088,0.8832,Di kendaraan apakah dapat ditemukan mesin pembakaran dalam?,mesin pembakaran dalam nih di kendaraan apa aja biasanya ada sih
+1769,0.8847,Apa penyebab menstruasi?,menstruasi nih penyebabnya apa sih anjir
+4232,0.8860,apakah agama yang di anut oleh orang Minangkabau ?,orang minangkabau anut agama apa sih
+3212,0.8862,Kapan Italia menjadi negara Republik ?,italia jadi negara republik itu kapan sih gan
+1854,0.8876,Siapakah yang dikenal sebagai bapak ekonomi ?,bapak ekonomi nih siapa sih yg dikenal sebagai bapak ekonomi ya gan
+3620,0.8878,apakah bahasa Yunani adalah bahasa tertua di dunia?,bahasa Yunani nih beneran bahasa tertua di dunia ga sih anjir
+4362,0.8884,Negara manakah yang pertama kali mengirim satelit ke luar angkasa ?,luar angkasa nih negara mana yg pertama kali ngirim satelit sih
+6087,0.8886,apakah cahaya lebih cepat dari suara?,nih pertanyaan fisika cahaya tuh beneran lebih cepet dari suara gak sih
+6052,0.8899,Berapa populasi penganut kristen di Indonesia tahun 2010 ?,kristen di indonesia taun 2010 populasinya brp nih
+298,0.8900,apakah yang di maksud dengan uskup?,uskup itu maksudnya apa sih gan jelasin dikit dong
+3984,0.8909,kapankah  Alamat IP pertama kali diperkenalkan pada komputer?,alamat ip nih pertama kali dikenalin ke komputer kapan sih
+2898,0.8920,Dimana Tuak nira diproduksi di Indonesia?,tuak nira di Indonesia diproduksi dimana sih banyak di daerah mana nih
+1956,0.8922,apakah minuman beralkohol khas Rusia?,minuman beralkohol khas Rusia itu ada gak sih cuy
+830,0.8925,Berapa Luas kota Cirebon?,kota Cirebon luasnya brp sih cuy
+5583,0.8950,dimanakah letak Gereja tertua di dunia?,gereja tertua di dunia nih letaknya di mana ya anjir
+5811,0.8962,Bagaimankah sistem pemerintahan Mesir?,mesir sistem pemerintahan kayak gimana sih anjir
+568,0.8964,siapakah ayah dari Sultan Mansur Syah?,sultan mansur syah nih ayahnya siapa sih
+4254,0.8968,Kapan internet ditemukan ?,internet itu sebenernya ditemukan kapan sih anjir
+4603,0.8976,dimanakah Kampanye Guadalkanal terjadi?,kampanye guadalkanal itu kejadian dimana ya gan
+713,0.8978,apakah mata uang yang digunakan di Jerman ?,jerman pake mata uang apa sih anjir
+3472,0.8981,Kapankah hari pancasila diperingati ?,hari pancasila diperingatin kapan sih gan
+367,0.8996,Apakah pengertian dari hadist ?,soal hadist pengertian hadist itu apa sih anjir
+2035,0.9016,Apa makna dari gelar Adipati ?,gelar adipati maksudnya apaan sih gan
+4677,0.9018,Kapan Istana Osaka didirikan?,istana osaka kapan didirikan sih
+2233,0.9042,Apakah nama tempat ibadah Yahudi ?,tempat ibadah yahudi itu namanya apa sih cuy
+78,0.9045,kapankah provinsi Bangka Belitung didirikan?,provinsi Bangka Belitung resmi dibentuk kapan sih anjir
+3969,0.9060,Siapa ibu Bolesław I Chrobry?,Bolesław I Chrobry nih ibu dia siapa sih
+2188,0.9077,Apakah jabatan Prof. Dr. Johannes Baptista Sumarlin?,prof dr johannes baptista sumarlin jabatannya apa ya gan
+220,0.9077,apakah hewan tercepat di dunia?,hewan tercepat di dunia tuh apa ya anjir gue penasaran
+361,0.9078,Apakah Enzim restriksi bersifat asam?,enzim restriksi bersifat asam ga sih kok penasaran
+5003,0.9086,dimanakah kantor pusat Sinar Harapan?,sinar harapan kantornya ada di mana sih gan
+1082,0.9088,Berapa populasi pemeluk agama islam di Indonesi tahun 2010?,tahun 2010 populasi pemeluk agama islam di indonesia brp sih anjir
+316,0.9122,Apakah bilangan genap?,bilangan genap itu apa sih cuy
+4797,0.9131,Kapan Gerakan Angkatan Muda Kristen Indonesia didirikan?,gerakan angkatan muda kristen indonesia didirikan kapan ya penasaran nih
+5567,0.9136,berapakah luas Kabupaten Brebes Jawa Tengah?,kabupaten brebes jawa tengah luasnya brp ya gaes
+4733,0.9137,Apakah nama tempat peribadatan agama Buddha?,tempat peribadatan agama buddha tu namanya apa sih cuy
+1158,0.9139,berapakah jumlah Pahlawan Nasional di Indonesia?,pahlawan nasional di indonesia jumlah brp ya kok
+3767,0.9143,apakah yang di maksud dengan atom?,atom nih yg dimaksud itu apa sih
+1266,0.9150,Siapa itu para samurai ?,para samurai itu siapa sih anjir
+5352,0.9157,Ada berapa season serial drama Prison Break?,serial drama prison break ada brp season sih penasaran
+1450,0.9157,Kapan Jagatara Oharu lahir?,jagatara oharu lahir kapan sih gan
+4217,0.9162,Berapa luas Republik Ghana?,republik ghana luasnya brp ya anjir
+6085,0.9170,Siapa yang dimaksud dengan orang-orang Majus ?,orang orang Majus itu siapa sebenernya asalnya dari mana sih
+4779,0.9195,apakah nama ibukota Australia?,australia ibukotanya apa nih gan
+555,0.9202,Apakah aroma bahan dari koktail berasal dari buah ?,aroma bahan koktail asalnya dari buah apa nih gaes
+2843,0.9218,Apakah Albert Einstein‎ filsuf berasal dari Jerman?,albert einstein filsuf asalnya dari jerman gak ya gw penasaran
+4387,0.9220,berapakah luas Kabupaten Trenggalek?,kabupaten trenggalek luasnya brp sih cuy
+5286,0.9226,Siapakah yang mendirikan Pondok Pesantren Pabelan?,pondok pesantren pabelan itu didirikan siapa ya anjir
+5586,0.9236,Apa nama negara terkecil di Eropa?,negara terkecil di eropa namanya apa nih gan
+3227,0.9237,Siapakah tokoh utama dalam Dragon Ball ?,dragon ball tokoh utama siapa sih anjir
+3662,0.9244,Kapankah hari kemerdekaan Ukraina?,hari kemerdekaan ukraina tuh kapan sih
+5278,0.9255,Apa nomor atom Karbon?,nomor atom Karbon brp sih anjir
+1858,0.9256,Berapa luas Kabupaten Bangka Selatan?,kabupaten bangka selatan luasnya brp ya gan
+3254,0.9257,Apakah nama penyakit yang menyerang Gandum?,nama penyakit yg nyerang gandum apa sih
+5210,0.9301,bahasa apakah yang paling banyak digunakan di Afganistan?,di Afganistan bahasa apa yg paling banyak dipake ya cuy
+79,0.9302,Siapa yang memenangi balapan Formula 1 pertama ?,balapan formula 1 pertama dimenangin siapa ya cuy
+3696,0.9303,Apa warna bendera India ?,bendera india warnanya apa sih cuy
+4168,0.9343,Kapan atom ditemukan ?,atom itu pertama kali ditemukan kapan sih anjir
+706,0.9370,Siapakah yang membawa agama kristen masuk ke Indonesia?,agama kristen masuk ke Indonesia itu siapa yg bawa sih kok
+310,0.9375,Siapa pendiri General Electric Transportation?,general electric transportation didirikan sama siapa gan
+5245,0.9386,negara manakah yang paling banyak menggunakan Bahasa Sanskerta?,bahasa sanskerta dipake paling banyak di negara mana ya gan
+5557,0.9413,dari manakah asal jamur Shiitake?,jamur shiitake asalnya dari mana sih nih
+2987,0.9428,Kapan ilmu biologi ditemukan ?,ilmu biologi mulai ditemukan kapan sih kok penasaran
+5253,0.9480,Kapan Imagawa Yoshimoto meninggal ?,Imagawa Yoshimoto tuh meninggal kapan ya
+5370,0.9502,kapankah Toy Story pertama dirilis?,toy story yang pertama dirilis kapan sih gan
+1407,0.9503,kapankah internet di ciptakan?,internet itu diciptakan kapan sih anjir
+1130,0.9506,Apa penyebab kematian Mgr. Arnold Verstraelen ?,mgr. arnold verstraelen meninggal karena apa sih
+2148,0.9512,Kapan ilmu ekonomi pertama dipelajari?,ilmu ekonomi pertama kali dipelajari kapan sih gaes
+4816,0.9524,Kapan Bayezid I lahir ?,bayezid i lahir kapan sih
+4574,0.9532,Siapa pemimpin pertama Kekhalifahan Abbasiyah?,kekhalifahan abbasiyah pemimpin pertamanya siapa sih
+3406,0.9556,kapankah Kesultanan Utsmaniyah didirikan?,kesultanan utsmaniyah itu didirikan kapan ya
+3787,0.9580,Kapan Dr. Moewardi lulus dari STOVIA?,dr moewardi lulus dari stovia kapan sih
+19,0.9582,Apakah karya tulis Irma Hardisurya yang pertama?,karya tulis pertama irma hardisurya itu apa sih
+1410,0.9587,Kapan hari kemerdekaan Republik Albania?,republik albania hari kemerdekaan kapan sih
+1905,0.9676,Kapan Australia diperingati di Selandia Baru?,Australia diperingati di Selandia Baru itu kapan sih
+3110,0.9680,Apa partai politik pertama di Indonesia ?,partai politik pertama di indonesia itu partai apa sih nih
+3992,0.9697,Apakah ibukota Vietnam?,vietnam ibukota nya apa sih
+662,0.9705,Apa warna bendera Norwegia ?,bendera norwegia warnanya apa ya
+2919,0.9726,Apakah bahasa Kekaisaran Persia Akhaimenia?,kekaisaran persia akhaimenia bahasanya apa sih ya
+4031,0.9739,Siapakah vokalis dari grup The Police?,the police vokalisnya siapa sih
+358,0.9833,apakah siaran TV tertua di Indonesia?,siaran tv tertua di Indonesia itu apa ya sih
+5706,0.9835,siapakah pencipta serial Transformers?,serial Transformers penciptanya siapa sih
+1725,0.9874,Apakah nama alat komunikasi sebelum ditemukannya telepon ?,alat komunikasi sebelum ditemukannya telepon itu namanya apa sih

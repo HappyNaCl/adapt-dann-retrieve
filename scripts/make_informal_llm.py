@@ -1,9 +1,11 @@
 """Generate the LLM-paraphrase informal variant of a query set (Phase 2).
 
-The `llm` arm of Phase 2: rewrite formal MIRACL-id queries into heavy colloquial
-Indonesian with an LLM, few-shot-primed in STIF / Kamus-Alay register. Meaning is
-preserved so the formal qrels stay valid (verify later with
-src/eval/semantic_preservation.py before trusting the set).
+The `llm` arm of Phase 2: rewrite formal MIRACL-id queries into heavy Twitter/X
+register Indonesian with an LLM, few-shot-primed for aggressive slang. Named
+entities, numbers, and key terms are kept spelled out in full (only register,
+spelling, and structure are informalized) so the formal qrels stay valid — this
+is the fix for the "Maluku Utara -> malut" entity-mangling seen in the manual
+heavy set. Verify with src/eval/semantic_preservation.py before trusting the set.
 
 Model host: Azure AI Foundry / Azure OpenAI, deployment = gpt-5-mini. Configure
 via environment (a .env in repo root is auto-loaded if python-dotenv is present):
@@ -36,6 +38,7 @@ if sys.platform == "win32" and sys.flags.utf8_mode == 0:
 import argparse
 import csv
 import json
+import random
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -72,32 +75,89 @@ def load_env(path: str = os.path.join(_REPO_ROOT, ".env")) -> None:
             os.environ.setdefault(key.strip(), val.strip().strip("'\""))
 
 SYSTEM_PROMPT = """\
-Kamu penutur asli bahasa Indonesia yang mengubah pertanyaan formal menjadi \
-gaya informal/gaul seperti orang chat sehari-hari (WhatsApp, X, forum).
+Kamu netizen Indonesia. Tulis ULANG pertanyaan formal jadi cuitan gaya Twitter/X \
+yang santai banget: huruf kecil semua, tanpa tanda baca, banyak singkatan dan \
+partikel, kayak orang nanya sambil ngobrol di timeline.
 
-Aturan:
-- PERTAHANKAN makna dan kebutuhan informasi persis sama. Jangan menambah atau \
-menghapus entitas, nama, angka, atau maksud pertanyaan.
-- Ubah HANYA register: pakai slang, singkatan, klitik (gue/lo/gw), partikel \
-(sih, dong, deh, nih, kan), ejaan santai (yg, gak, udah, kalo, bgt), dan gaya \
-ngobrol. Boleh drop tanda baca/kapital.
-- Tetap satu pertanyaan yang wajar diketik orang. Jangan kasih penjelasan.
-- Balas HANYA JSON: {"informal": "<hasil rewrite>"}"""
+WAJIB gaya berat (heavy informal):
+- huruf kecil semua, buang tanda baca dan kapital.
+- pakai klitik & slang: gue/lo/gw, gaes, cuy, gan, dong, sih, deh, nih, kan, anjir, ya.
+- singkat kata umum: yang->yg, tidak->gak/ga, sudah->udah, dengan->sama, \
+kenapa->knp, berapa->brp, tahun->taun, orang->org.
+- ubah susunan kalimat jadi gaya ngobrol (topik dulu baru nanya).
 
-# Few-shot pairs (formal -> heavy informal), primed on STIF / Kamus-Alay style.
-FEWSHOT = [
-    ("Apa yang dimaksud dengan artefak?", "artefak tu maksudnya apaan sih? ada yg tau ga"),
-    ("Di kendaraan apakah dapat ditemukan mesin pembakaran dalam?",
-     "mesin pembakaran dalam tuh biasa ada di kendaraan apa ya?"),
+VARIASI (penting):
+- Tiap pertanyaan gayanya beda-beda. JANGAN pakai frasa penutup yang sama \
+berulang. Hindari selalu menutup dengan "ada yg tau ga", "jelasin dong", \
+"kasih tau dong" — itu terlalu monoton.
+- Sering-sering tanya LANGSUNG tanpa embel-embel penutup. Kalau mau kasih \
+partikel, ganti-ganti (sih, ya, dah, deh, kan, kok, anjir, woy) dan taruh di \
+tempat berbeda, bukan template yang sama.
+
+DILARANG KERAS (bikin makna rusak):
+- JANGAN singkat, terjemahkan, atau ganti NAMA DIRI / ENTITAS / ISTILAH KUNCI. \
+Nama orang, tempat, organisasi, judul, dan istilah teknis harus DITULIS UTUH \
+(boleh huruf kecil, tapi kata-katanya lengkap).
+  SALAH: "Maluku Utara" -> "malut"   |   BENAR: "Maluku Utara" -> "maluku utara"
+  SALAH: "Perang Dunia II" -> "pd2"   |   BENAR: -> "perang dunia II"
+- JANGAN ubah angka, tanggal, atau satuan. JANGAN menambah/menghapus maksud.
+
+Balas HANYA JSON: {"informal": "<hasil rewrite>"}"""
+
+# Few-shot POOL (formal -> heavy Twitter/X register). Deliberately varied endings
+# so the model doesn't template one closer; build_messages samples a rotating
+# subset per query. Each keeps named entities, numbers, and key terms spelled out
+# in full — only register/spelling/structure is informalized. The Maluku Utara
+# pair is the anchor against entity mangling.
+FEWSHOT_POOL = [
+    ("Apa yang dimaksud dengan artefak?", "artefak tu maksudnya apaan sih"),
+    ("Berapa luas Maluku Utara?", "eh luas Maluku Utara brp ya"),
     ("Pada umur berapa Paul David Hewson bergabung dengan U2?",
-     "si Paul David Hewson gabung U2 pas umur berapa sih"),
-    ("Apa penyebab menstruasi?", "menstruasi tuh penyebabnya apaan sih sebenernya"),
+     "Paul David Hewson gabung U2 pas umur brp dah penasaran"),
+    ("Berapa populasi pemeluk agama Islam di Indonesia pada tahun 2010?",
+     "org islam di Indonesia taun 2010 brp banyak sih jumlahnya"),
+    ("Siapa penemu bola lampu?", "yg nemuin bola lampu siapa dah"),
+    ("Apa penyebab menstruasi?", "menstruasi tu kenapa bisa terjadi kok"),
+    ("Kapan Perang Dunia II berakhir?", "Perang Dunia II kelar taun brp"),
+    ("Di mana letak Gunung Semeru?", "Gunung Semeru tuh letaknya dimana ya woy"),
+]
+N_SHOTS = 5  # examples shown per call, sampled per query for variety
+
+# --lean: same heavy register, but NO padding — forbids adding clauses about the
+# asker's state ("gue penasaran / blom hapal / mau masukin laporan") that carry no
+# information but drag the query embedding off the entity. Isolates the register
+# effect from padding noise (see the semantic-preservation finding).
+LEAN_RULE = """
+
+HEMAT KATA (mode lean):
+- JANGAN tambah klausa/curhat soal keadaan penanya: "gue penasaran", "blom hapal", \
+"masih bingung", "lagi kepo", "mau masukin laporan", "baru denger" — DILARANG.
+- Cukup pertanyaannya saja + maksimal SATU partikel pendek (sih/ya/dong). Jangan \
+lebih panjang dari pertanyaan aslinya."""
+
+FEWSHOT_POOL_LEAN = [
+    ("Apa yang dimaksud dengan artefak?", "artefak tu maksudnya apaan sih"),
+    ("Berapa luas Maluku Utara?", "luas Maluku Utara brp ya"),
+    ("Pada umur berapa Paul David Hewson bergabung dengan U2?",
+     "Paul David Hewson gabung U2 umur brp"),
+    ("Berapa populasi pemeluk agama Islam di Indonesia pada tahun 2010?",
+     "pemeluk islam di Indonesia taun 2010 brp sih"),
+    ("Siapa penemu bola lampu?", "penemu bola lampu siapa sih"),
+    ("Apa penyebab menstruasi?", "menstruasi penyebabnya apa"),
+    ("Kapan Perang Dunia II berakhir?", "Perang Dunia II kelar taun brp"),
+    ("Di mana letak Gunung Semeru?", "Gunung Semeru letaknya dimana ya"),
 ]
 
 
-def build_messages(formal: str) -> list[dict]:
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    for f, i in FEWSHOT:
+def build_messages(formal: str, lean: bool = False) -> list[dict]:
+    # Rotate a per-query subset of the pool (seeded by the query, so reproducible)
+    # so the few-shot priming isn't identical across calls and won't template one closer.
+    pool = FEWSHOT_POOL_LEAN if lean else FEWSHOT_POOL
+    system = SYSTEM_PROMPT + LEAN_RULE if lean else SYSTEM_PROMPT
+    rng = random.Random(formal)
+    shots = rng.sample(pool, k=min(N_SHOTS, len(pool)))
+    messages = [{"role": "system", "content": system}]
+    for f, i in shots:
         messages.append({"role": "user", "content": f})
         messages.append({"role": "assistant", "content": json.dumps({"informal": i}, ensure_ascii=False)})
     messages.append({"role": "user", "content": formal})
@@ -112,12 +172,12 @@ def load_formal(path: str) -> dict[str, str]:
     return {r["query_id"]: r["formal"].strip() for r in rows if r["formal"].strip()}
 
 
-def load_done(path: str) -> set[str]:
+def load_done(path: str, column: str) -> set[str]:
     """Query ids already written with a non-empty rewrite (for --resume)."""
     if not os.path.exists(path):
         return set()
     with open(path, encoding="utf-8", newline="") as f:
-        return {r["query_id"] for r in csv.DictReader(f, delimiter="\t") if r.get("llm", "").strip()}
+        return {r["query_id"] for r in csv.DictReader(f, delimiter="\t") if r.get(column, "").strip()}
 
 
 def make_client(api_version: str):
@@ -132,13 +192,14 @@ def make_client(api_version: str):
     return AzureOpenAI(azure_endpoint=endpoint, api_key=key, api_version=api_version)
 
 
-def rewrite(client, deployment: str, formal: str, reasoning: str, max_tokens: int, retries: int = 4) -> str:
+def rewrite(client, deployment: str, formal: str, reasoning: str, max_tokens: int,
+            lean: bool = False, retries: int = 4) -> str:
     """One rewrite with retry/backoff; returns the informal string (JSON-parsed)."""
     for attempt in range(retries):
         try:
             resp = client.chat.completions.create(
                 model=deployment,
-                messages=build_messages(formal),
+                messages=build_messages(formal, lean),
                 response_format={"type": "json_object"},
                 max_completion_tokens=max_tokens,
                 extra_body={"reasoning_effort": reasoning},
@@ -167,7 +228,10 @@ def main() -> None:
                     help="source TSV with a 'formal' column (ignored if --from-miracl)")
     ap.add_argument("--from-miracl", action="store_true",
                     help="rewrite the full MIRACL-id dev split instead of the pilot")
-    ap.add_argument("--out", default="experiments/pilot/pilot_informal_llm.tsv")
+    ap.add_argument("--lean", action="store_true",
+                    help="heavy register WITHOUT filler padding (isolates register from padding noise)")
+    ap.add_argument("--out", default=None, help="output TSV (default depends on --lean)")
+    ap.add_argument("--column", default=None, help="variant column name (default: llm_lean if --lean else llm)")
     ap.add_argument("--deployment", default=None, help="override AZURE_OPENAI_DEPLOYMENT")
     ap.add_argument("--api-version", default=os.environ.get("AZURE_OPENAI_API_VERSION", DEFAULT_API_VERSION))
     ap.add_argument("--reasoning-effort", default="low", choices=["minimal", "low", "medium", "high"])
@@ -177,6 +241,9 @@ def main() -> None:
     ap.add_argument("--no-resume", action="store_true", help="ignore existing output and redo all")
     ap.add_argument("--dry-run", action="store_true", help="print the prompt for one query and exit")
     args = ap.parse_args()
+
+    column = args.column or ("llm_lean" if args.lean else "llm")
+    out = args.out or (f"experiments/pilot/pilot_informal_{column}.tsv")
 
     with open(args.config, encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
@@ -189,8 +256,8 @@ def main() -> None:
 
     if args.dry_run:
         qid, text = next(iter(formal.items()))
-        print(f"[llm] dry-run prompt for query {qid}:\n")
-        for m in build_messages(text):
+        print(f"[llm] dry-run prompt for query {qid} (lean={args.lean}):\n")
+        for m in build_messages(text, args.lean):
             print(f"--- {m['role']} ---\n{m['content']}\n")
         print("[llm] no API call made.")
         return
@@ -199,33 +266,33 @@ def main() -> None:
     if not deployment:
         sys.exit("[llm] set AZURE_OPENAI_DEPLOYMENT or pass --deployment (e.g. gpt-5-mini)")
 
-    done = set() if args.no_resume else load_done(args.out)
+    done = set() if args.no_resume else load_done(out, column)
     pending = [(q, t) for q, t in formal.items() if q not in done]
     if args.limit is not None:
         pending = pending[: args.limit]
     if not pending:
-        print(f"[llm] nothing to do — {len(done)} already in {args.out}")
+        print(f"[llm] nothing to do — {len(done)} already in {out}")
         return
 
     client = make_client(args.api_version)
-    write_header = args.no_resume or not os.path.exists(args.out) or os.path.getsize(args.out) == 0
+    write_header = args.no_resume or not os.path.exists(out) or os.path.getsize(out) == 0
     mode = "w" if args.no_resume else "a"
     lock = threading.Lock()
     ok = fail = 0
 
-    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
-    with open(args.out, mode, encoding="utf-8", newline="") as fh:
+    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+    with open(out, mode, encoding="utf-8", newline="") as fh:
         writer = csv.writer(fh, delimiter="\t")
         if write_header:
-            writer.writerow(["query_id", "llm"])
+            writer.writerow(["query_id", column])
             fh.flush()
 
         def work(item):
             qid, text = item
-            return qid, rewrite(client, deployment, text, args.reasoning_effort, args.max_tokens)
+            return qid, rewrite(client, deployment, text, args.reasoning_effort, args.max_tokens, args.lean)
 
         print(f"[llm] {deployment} via {args.api_version}, reasoning={args.reasoning_effort}, "
-              f"{len(pending)} queries, {args.workers} workers")
+              f"lean={args.lean}, col={column}, {len(pending)} queries, {args.workers} workers")
         with ThreadPoolExecutor(max_workers=args.workers) as ex:
             futures = {ex.submit(work, item): item[0] for item in pending}
             for fut in as_completed(futures):
@@ -243,11 +310,11 @@ def main() -> None:
                     if ok % 25 == 0:
                         print(f"[llm]   {ok} done...")
 
-    print(f"[llm] wrote {ok} rewrites to {args.out} ({fail} failed, {len(done)} pre-existing)")
+    print(f"[llm] wrote {ok} rewrites to {out} ({fail} failed, {len(done)} pre-existing)")
     if fail:
         print("[llm] re-run to retry failed queries (resume skips the ones that succeeded)")
     else:
-        print(f"[llm] feed to: python scripts/run_gap_eval.py --tag gap-llm --variants {args.out}")
+        print(f"[llm] feed to: python scripts/run_gap_eval.py --tag gap-{column} --variants {out}")
 
 
 if __name__ == "__main__":
