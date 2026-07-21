@@ -1,3 +1,12 @@
 timestamp,tag,model,dataset,corpus,n_docs,n_queries,seed,ndcg@10,recall@100,mrr@10,encode_seconds,device
 2026-07-16T11:34:48,smoke-e5base,intfloat/multilingual-e5-base,miracl/id/dev,subset20000,28286,960,42,0.7122,0.9881,0.7718,2481,cpu
 2026-07-16T14:28:56,e5-base-zeroshot,intfloat/multilingual-e5-base,miracl/id/dev,full,1446315,960,42,0.5103,0.8738,0.6218,3111,cuda
+2026-07-16T15:44:13,gap-pilot-formal,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.5097,0.8813,0.6092,,cuda
+2026-07-16T15:44:19,gap-pilot-informal,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.4496,0.8111,0.5476,,cuda
+2026-07-16T15:44:24,gap-pilot-normalized,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.473,0.8312,0.5826,,cuda
+2026-07-17T08:55:31,gap-bounds-formal,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.5097,0.8813,0.6092,,cuda
+2026-07-17T08:55:37,gap-bounds-informal,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.4461,0.8128,0.5443,,cuda
+2026-07-17T08:55:42,gap-bounds-normalized,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.4729,0.8295,0.5826,,cuda
+2026-07-17T08:55:48,gap-bounds-strong_norm,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.5035,0.874,0.605,,cuda
+2026-07-17T08:55:54,gap-bounds-heavy,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.0265,0.1194,0.0397,,cuda
+2026-07-17T08:56:00,gap-bounds-heavy_normalized,intfloat/multilingual-e5-base,miracl/id/dev,full,,150,42,0.3297,0.6146,0.4204,,cuda

@@ -6,6 +6,13 @@ queries are encoded here) and a pilot TSV with the `informal` column filled
 
     python scripts/run_gap_eval.py --pilot experiments/pilot/pilot_queries.tsv --tag gap-pilot
 
+Extra query variants (e.g. the Phase 1 bounding arms: oracle-strength
+normalization, heavy-informal) come from a second TSV whose columns beyond
+query_id each become a variant:
+
+    python scripts/run_gap_eval.py --tag gap-bounds \
+        --variants experiments/pilot/pilot_variants.tsv
+
 Outputs:
   - per-variant rows appended to experiments/results.csv
   - experiments/gap/<tag>_per_query.csv   (paired per-query metrics, for figures)
@@ -24,6 +31,7 @@ if sys.platform == "win32" and sys.flags.utf8_mode == 0:
 
 import argparse
 import csv
+import itertools
 import json
 
 import numpy as np
@@ -35,11 +43,16 @@ from src.data import miracl, normalize
 from src.eval import harness, significance
 from src.utils import log_result, set_seed
 
-VARIANT_PAIRS = [  # (better-expected, worse-expected) comparisons to test
-    ("formal", "informal"),
-    ("normalized", "informal"),
-    ("formal", "normalized"),
-]
+def load_variants(path: str, qids: list[str]) -> dict[str, dict[str, str]]:
+    """Extra variants TSV: every column beyond query_id becomes a variant."""
+    with open(path, encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
+        names = [c for c in reader.fieldnames if c != "query_id"]
+        rows = {r["query_id"]: r for r in reader}
+    missing = [q for q in qids if q not in rows or any(not rows[q][n].strip() for n in names)]
+    if missing:
+        sys.exit(f"[gap] variants file {path} missing/empty for qids: {missing[:5]}...")
+    return {n: {q: rows[q][n].strip() for q in qids} for n in names}
 
 
 def load_pilot(path: str) -> dict[str, str]:
@@ -57,6 +70,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/base.yaml")
     ap.add_argument("--pilot", default="experiments/pilot/pilot_queries.tsv")
+    ap.add_argument("--variants", default=None, help="optional TSV of extra query variants (columns beyond query_id)")
     ap.add_argument("--tag", required=True)
     ap.add_argument("--model", default=None)
     ap.add_argument("--device", default=None)
@@ -90,6 +104,12 @@ def main() -> None:
         "informal": informal,
         "normalized": normalize.normalize_queries(informal),
     }
+    if args.variants:
+        extra = load_variants(args.variants, qids)
+        clash = set(extra) & set(variants)
+        if clash:
+            sys.exit(f"[gap] variant names clash with built-ins: {clash}")
+        variants.update(extra)
     qrels_all = miracl.load_qrels(split)
     qrels = {q: qrels_all[q] for q in qids}
     print(f"[gap] {len(qids)} paired queries, model={model_name}, device={device}", flush=True)
@@ -124,11 +144,9 @@ def main() -> None:
 
     # Same-intent embedding cosines: direct evidence of register shift (paper figure).
     cosines = {
-        pair: (q_embs[a] * q_embs[b]).sum(axis=1)  # embeddings are L2-normalized
-        for pair, (a, b) in {
-            "formal_vs_informal": ("formal", "informal"),
-            "formal_vs_normalized": ("formal", "normalized"),
-        }.items()
+        f"formal_vs_{v}": (q_embs["formal"] * q_embs[v]).sum(axis=1)  # embeddings are L2-normalized
+        for v in variants
+        if v != "formal"
     }
 
     primary = metrics[0]  # ndcg@10 — decomposition is stated on the primary metric
@@ -138,7 +156,7 @@ def main() -> None:
     residual = mean["formal"] - mean["normalized"]
 
     sig: dict[str, dict] = {}
-    for a, b in VARIANT_PAIRS:
+    for a, b in itertools.combinations(variants, 2):
         p_values = {}
         for m in metrics:
             av = np.array([per_query[a][m][q] for q in qids])
@@ -149,19 +167,29 @@ def main() -> None:
         holm = significance.holm_bonferroni({m: v["p_perm"] for m, v in p_values.items()})
         sig[f"{a}_vs_{b}"] = {"metrics": p_values, "significant_holm": holm}
 
+    decomposition = {
+        "primary_metric": primary,
+        "total_gap": total_gap,
+        "vocabulary_part": vocab_part,
+        "register_residual": residual,
+        "vocabulary_pct_of_gap": 100 * vocab_part / total_gap if total_gap else float("nan"),
+        "residual_pct_of_gap": 100 * residual / total_gap if total_gap else float("nan"),
+    }
+    # Bounding arms (Phase 1 follow-up): oracle normalization bounds the
+    # residual from below; the heavy register bounds the gap from above.
+    if "strong_norm" in variants:
+        decomposition["residual_under_oracle_norm"] = mean["formal"] - mean["strong_norm"]
+    if "heavy" in variants:
+        decomposition["heavy_total_gap"] = mean["formal"] - mean["heavy"]
+    if "heavy_normalized" in variants:
+        decomposition["heavy_register_residual"] = mean["formal"] - mean["heavy_normalized"]
+
     summary = {
         "tag": args.tag,
         "model": model_name,
         "n_queries": len(qids),
         "mean": {v: {m: float(np.mean(list(per_query[v][m].values()))) for m in metrics} for v in variants},
-        "decomposition": {
-            "primary_metric": primary,
-            "total_gap": total_gap,
-            "vocabulary_part": vocab_part,
-            "register_residual": residual,
-            "vocabulary_pct_of_gap": 100 * vocab_part / total_gap if total_gap else float("nan"),
-            "residual_pct_of_gap": 100 * residual / total_gap if total_gap else float("nan"),
-        },
+        "decomposition": decomposition,
         "significance": sig,
         "same_intent_cosine": {
             name: {
@@ -188,11 +216,18 @@ def main() -> None:
                 + [round(float(c[i]), 4) for c in cosines.values()]
             )
 
-    print(f"\n[gap] {primary}: formal={mean['formal']:.4f} informal={mean['informal']:.4f} "
-          f"normalized={mean['normalized']:.4f}")
+    print(f"\n[gap] {primary}: " + " ".join(f"{v}={mean[v]:.4f}" for v in variants))
     print(f"[gap] total gap={total_gap:.4f} | vocabulary={vocab_part:.4f} "
-          f"({summary['decomposition']['vocabulary_pct_of_gap']:.0f}%) | register residual={residual:.4f} "
-          f"({summary['decomposition']['residual_pct_of_gap']:.0f}%)")
+          f"({decomposition['vocabulary_pct_of_gap']:.0f}%) | register residual={residual:.4f} "
+          f"({decomposition['residual_pct_of_gap']:.0f}%)")
+    if "residual_under_oracle_norm" in decomposition:
+        print(f"[gap] LOWER BOUND — residual under oracle normalization: "
+              f"{decomposition['residual_under_oracle_norm']:.4f}")
+    if "heavy_total_gap" in decomposition:
+        line = f"[gap] UPPER BOUND — heavy-register gap: {decomposition['heavy_total_gap']:.4f}"
+        if "heavy_register_residual" in decomposition:
+            line += f" (residual after lexicon norm: {decomposition['heavy_register_residual']:.4f})"
+        print(line)
     print(f"[gap] summary -> {out_dir}/{args.tag}_summary.json")
 
 

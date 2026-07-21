@@ -1,0 +1,79 @@
+# Formal -> informal Indonesian injection map (Phase 2, lexicon-injection arm).
+#
+# Format:  <formal key><TAB><slang1|slang2|...>
+#   - One entry per line. Blank lines and lines starting with '#' are ignored.
+#   - The key is matched case-insensitively on whole words (\b...\b); multi-word
+#     keys (e.g. "tidak ada") are matched as a phrase and beat shorter keys.
+#   - The value is a '|'-separated list of colloquial alternatives. The FIRST is
+#     the default (used with --first-only); otherwise one is chosen per match by
+#     a seeded RNG, so runs are reproducible but not monotonous.
+#
+# Editing:  add/remove rows freely, reorder alternatives to change the default,
+#   then regenerate with  python scripts/make_informal_set.py
+# Keep swaps MEANING-PRESERVING — this set reuses the formal qrels, so a swap
+# that changes the information need corrupts relevance. Risky, grammar-altering
+# swaps are left commented out at the bottom; enable them only if you check intent.
+
+# --- negation / high-frequency function words ---
+tidak	nggak|gak|ga|enggak
+tidak ada	nggak ada|gaada|gada
+yang	yang|yg
+dengan	sama|ama|dgn
+untuk	buat|bwt
+karena	soalnya|krn|gara-gara
+juga	juga|jg
+atau	atau|apa
+tetapi	tapi|tp
+tapi	tapi|tp
+hanya	cuma|cuman|doang
+lebih	lebih|lbh
+banyak	banyak|byk
+sangat	banget
+dari    dri
+
+
+# --- pronouns / demonstratives ---
+saya	aku|gue|gw
+kamu	kamu|lo|lu
+ini	ini|nih
+itu	itu|tuh
+orang	orang|org
+
+# --- question words ---
+bagaimana	gimana|gmn
+mengapa	kenapa|knp
+kenapa	kenapa|knp
+apa	apa|apaan
+apakah apa iya|ap iy
+berapakah   sbrp|seberapa
+berapa  brp
+
+# --- tense / modality / aspect ---
+sudah	udah|udh|dah
+belum	belum|belom|blm
+akan	bakal|bakalan|mau
+bisa	bisa|isa
+dapat	bisa|dapet
+ingin	mau|pengen|pgn
+harus	harus|kudu|mesti
+sekarang	sekarang|skrg
+
+# --- conjunctions / comparison ---
+seperti	kayak|kaya|kek
+kalau	kalo|klo
+jika	kalo|kalau
+tahu	tau
+
+# --- verbs (meaning-preserving informal forms) ---
+membeli	beli|beliin
+memberikan	ngasih|kasih
+membuat	bikin|buat
+mendapatkan	dapetin|dapet
+menggunakan	pakai|pake|make
+
+# --- risky (grammar/meaning-altering): enable only after checking intent ---
+adalah	tuh
+pada	di|pas
+oleh	sama
+merupakan	itu
+tersebut	itu|tsb

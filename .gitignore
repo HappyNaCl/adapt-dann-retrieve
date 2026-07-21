@@ -8,3 +8,4 @@ wandb/
 experiments/*.ckpt
 .claude
 CLAUDE.md
+.env
